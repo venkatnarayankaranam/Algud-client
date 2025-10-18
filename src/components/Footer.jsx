@@ -12,7 +12,7 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-black border border-white rounded-lg flex items-center justify-center">
-                <link rel="preload" href="../client/public/algud-logo2.png" as="image"></link>
+                <link rel="preload" href="../algud-logo2.png" as="image"></link>
               </div>
               <span className="text-xl sm:text-2xl font-serif font-bold">ALGUD</span>
             </div>
