@@ -1,0 +1,251 @@
+/* stylelint-disable */
+/* PostCSS/Tailwind directives are used below and handled by the build pipeline */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    /* default neutral borders for minimalism */
+    @apply border-primary-200;
+  }
+  
+  body {
+   /* Premium black-and-white baseline */
+   font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+   @apply text-primary-900 bg-primary-100 antialiased;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Dark site wrapper: use this on top-level containers that should show the dark background
+    and ivory text (e.g. admin area). This avoids ivory text leaking into white cards/modals. */
+  .site-dark {
+   @apply bg-black text-white;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    color: #000000;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  /* Make anchor links clearly visible on the dark site background */
+  a {
+    @apply text-primary-900 underline-offset-2 hover:text-gold-500 transition-colors duration-300 ease-in-out;
+    text-decoration-thickness: 1px;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    /* Black button, white text; hover flips to white bg with black text and border */
+    @apply bg-black text-white px-6 py-3 rounded-lg font-medium border border-black transition-all duration-300 ease-in-out;
+    transition-property: background-color, color, border-color, transform, box-shadow;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-primary-900 px-6 py-3 rounded-lg font-medium border border-primary-200 transition-all duration-300 ease-in-out;
+  }
+  
+  .btn-gold {
+    /* Use sparingly for accents */
+    @apply bg-black text-white px-6 py-3 rounded-lg font-medium border border-black transition-all duration-300 ease-in-out;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border border-primary-200 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all duration-300 bg-white text-primary-900;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-primary-100 overflow-hidden text-primary-900;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  }
+  
+  .card-hover {
+    @apply card hover:shadow-lg hover:-translate-y-1 transition-transform duration-300 ease-in-out;
+    will-change: transform;
+  }
+  
+  .text-gradient {
+    /* Replace colorful gradient with a subtle black-to-gray for accents */
+    background: linear-gradient(90deg, #000000 0%, #4a4a4a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Ensure headings inside white cards are dark and readable */
+  .card h1, .card h2, .card h3, .card h4, .card h5, .card h6 {
+    @apply text-charcoal-900;
+  }
+  
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .container-max {
+    @apply max-w-7xl mx-auto;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* removed experimental `text-wrap: balance` due to PostCSS parser incompatibility */
+  /* Blinking brand animation */
+  @keyframes blinkText {
+    0% { opacity: 1; }
+    50% { opacity: 0.1; }
+    100% { opacity: 1; }
+  }
+
+  .blink {
+    animation: blinkText 1.2s linear infinite;
+  }
+}
+
+/* Utility for components/pages that need strong readable text on light backgrounds */
+  .text-visible {
+    @apply text-primary-900;
+  }
+
+/* Utility to force ivory text for elements placed on dark backgrounds */
+.text-on-dark {
+  @apply text-ivory-100;
+}
+
+/* Ensure white-background blocks inside the dark wrapper render dark text for readability */
+.site-dark .bg-white,
+.site-dark [class*="bg-white/"],
+.site-dark [class*="bg-white "] {
+  /* keep white cards readable inside dark wrapper */
+  @apply text-primary-900 bg-primary-50;
+}
+
+/* Loader styles for ALGUD site loader */
+.algud-loader {
+  position: fixed;
+  inset: 0;
+  background: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  opacity: 1;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+.algud-loader--hidden { opacity: 0; pointer-events: none; visibility: hidden }
+.algud-loader__inner { display: flex; gap: 0.6rem; }
+.algud-loader__char {
+  font-family: 'Playfair Display', serif;
+  color: white;
+  font-size: clamp(32px, 6vw, 64px);
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(12px);
+  display: inline-block;
+    animation: charIn 600ms forwards cubic-bezier(.2,.8,.2,1), algudBounce 900ms ease-in-out infinite;
+}
+@keyframes charIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+  /* Repeating bounce used by loader letters */
+  @keyframes algudBounce {
+    0% { transform: translateY(0); }
+    30% { transform: translateY(-12px); }
+    55% { transform: translateY(0); }
+    75% { transform: translateY(-6px); }
+    100% { transform: translateY(0); }
+  }
+
+  /* Stagger delays applied inline in Loader.jsx via style prop; for safety provide defaults */
+  .algud-loader__char:nth-child(1) { animation-delay: 0ms, 0ms; }
+  .algud-loader__char:nth-child(2) { animation-delay: 120ms, 120ms; }
+  .algud-loader__char:nth-child(3) { animation-delay: 240ms, 240ms; }
+  .algud-loader__char:nth-child(4) { animation-delay: 360ms, 360ms; }
+  .algud-loader__char:nth-child(5) { animation-delay: 480ms, 480ms; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .algud-loader__char { animation: none; transform: none; opacity: 1; }
+  }
+
+  /* ALGUD bounce animation for each letter */
+  @keyframes algudBounce {
+    0% { transform: translateY(0); }
+    30% { transform: translateY(-8px); }
+    50% { transform: translateY(0); }
+    70% { transform: translateY(-4px); }
+    100% { transform: translateY(0); }
+  }
+
+  .algud-word .algud-letter {
+    animation: algudBounce 700ms ease-in-out both;
+    display: inline-block;
+  }
+
+  /* Staggered delays for letters 0..5 */
+  .algud-word .algud-letter:nth-child(1) { animation-delay: 0ms; }
+  .algud-word .algud-letter:nth-child(2) { animation-delay: 100ms; }
+  .algud-word .algud-letter:nth-child(3) { animation-delay: 200ms; }
+  .algud-word .algud-letter:nth-child(4) { animation-delay: 300ms; }
+  .algud-word .algud-letter:nth-child(5) { animation-delay: 400ms; }
+
+  /* Trigger the animation only when nav is visible (repeat every few seconds) */
+  .algud-word .algud-letter {
+    animation-iteration-count: infinite;
+    animation-delay: 0ms; /* baseline; nth-child overrides this */
+    animation-duration: 900ms;
+    animation-timing-function: cubic-bezier(.2,.8,.2,1);
+    animation-fill-mode: both;
+    animation-direction: normal;
+  }
+
+  /* Cinematic utilities for hero lines
+    Default state is visible so the text never disappears if animations are blocked or fail to run.
+    The `.animate` class triggers the cinematic keyframes for the entrance effect. */
+  .cinematic-line { opacity: 1; transform: none; filter: none; }
+  .cinematic-line.animate { animation: cinematicReveal 1100ms cubic-bezier(.22,.9,.32,1) both; }
+
+  /* Stagger delay helpers (can be applied inline or via class) */
+  .delay-1 { animation-delay: 80ms; }
+  .delay-2 { animation-delay: 180ms; }
+  .delay-3 { animation-delay: 280ms; }
+  .delay-4 { animation-delay: 380ms; }
+
+  /* Subtle gold glow for highlighted words */
+  .gold-glow { text-shadow: 0 6px 24px rgba(212,175,55,0.12); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cinematic-line, .cinematic-line.animate { animation: none !important; transform: none !important; opacity: 1 !important; filter: none !important; }
+  }
+
+  /* Cart badge helpers to ensure proper positioning and size on mobile */
+  .cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #fbbf24; /* gold-500 */
+    color: #000;
+    height: 20px;
+    min-width: 20px;
+    padding: 0 6px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  /* Small utility to collapse the mobile menu when not needed */
+  .mobile-nav-collapsed { display: none; }
+
