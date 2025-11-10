@@ -187,9 +187,10 @@
     100% { transform: translateY(0); }
   }
 
+  /* Make navbar ALGUD letters static (no bounce) */
   .algud-word .algud-letter {
-    animation: algudBounce 700ms ease-in-out both;
     display: inline-block;
+    animation: none;
   }
 
   /* Staggered delays for letters 0..5 */
@@ -199,14 +200,9 @@
   .algud-word .algud-letter:nth-child(4) { animation-delay: 300ms; }
   .algud-word .algud-letter:nth-child(5) { animation-delay: 400ms; }
 
-  /* Trigger the animation only when nav is visible (repeat every few seconds) */
+  /* Previously repeated bounce for logo letters disabled to keep navbar stable */
   .algud-word .algud-letter {
-    animation-iteration-count: infinite;
-    animation-delay: 0ms; /* baseline; nth-child overrides this */
-    animation-duration: 900ms;
-    animation-timing-function: cubic-bezier(.2,.8,.2,1);
-    animation-fill-mode: both;
-    animation-direction: normal;
+    animation: none;
   }
 
   /* Cinematic utilities for hero lines

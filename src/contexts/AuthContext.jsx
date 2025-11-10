@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useEffect } from 'react'
+import { createContext, useContext, useReducer, useEffect, useRef } from 'react'
 import { authAPI } from '../services/api'
 
 const AuthContext = createContext()
@@ -52,10 +52,13 @@ const authReducer = (state, action) => {
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState)
+  const triedLoadRef = useRef(false)
 
-  // Load user on app start
+  // Load user on app start (once). We cannot check for httpOnly cookie from JS,
+  // so always attempt a single /auth/me. If 401, we simply clear loading.
   useEffect(() => {
-    // Try to load user; backend will verify cookie if present
+    if (triedLoadRef.current) return
+    triedLoadRef.current = true
     loadUser().catch(() => dispatch({ type: 'SET_LOADING', payload: false }))
   }, [])
 

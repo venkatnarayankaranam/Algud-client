@@ -272,6 +272,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const [imagePreview, setImagePreview] = useState(product?.imageURL || '')
   const [imageUploadProgress, setImageUploadProgress] = useState(0)
   const [uploadController, setUploadController] = useState(null)
+  const [formErrors, setFormErrors] = useState([])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -351,6 +352,22 @@ const ProductModal = ({ product, onClose, onSave }) => {
     setLoading(true)
 
     try {
+      // Client-side validations to avoid round trips for obvious issues
+      const errors = []
+      if (!formData.name.trim()) errors.push('Product name is required.')
+      if (!formData.description.trim()) errors.push('Description is required.')
+      if (formData.price === '' || Number(formData.price) < 0) errors.push('Price must be a non-negative number.')
+      if (!formData.category) errors.push('Category is required.')
+      if (formData.stock === '' || Number(formData.stock) < 0) errors.push('Stock must be a non-negative number.')
+      if (!imageFile && !formData.imageURL.trim()) errors.push('Please upload an image or provide an image URL.')
+      if (!formData.sizes.length) errors.push('Select at least one size.')
+      if (errors.length) {
+        setFormErrors(errors)
+        // Show first error prominently
+        toast.error(errors[0])
+        setLoading(false)
+        return
+      }
       // Prepare payload: only include image file when a new file was selected.
       const submitData = {
         ...formData,
@@ -425,7 +442,22 @@ const ProductModal = ({ product, onClose, onSave }) => {
       onSave()
     } catch (error) {
       console.error('Error saving product:', error)
-      toast.error('Failed to save product')
+      // Attempt to surface server-side validation details
+      const resp = error.response?.data
+      if (resp) {
+        if (resp.errors && Array.isArray(resp.errors) && resp.errors.length) {
+          setFormErrors(resp.errors)
+          // Show up to 3 errors as individual toasts for visibility
+          resp.errors.slice(0,3).forEach(msg => toast.error(msg))
+        } else if (resp.message) {
+          setFormErrors([resp.message])
+          toast.error(resp.message)
+        } else {
+          toast.error('Failed to save product')
+        }
+      } else {
+        toast.error('Failed to save product')
+      }
     } finally {
       setLoading(false)
       setImageUploadProgress(0)
@@ -453,6 +485,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {formErrors.length > 0 && (
+              <div className="rounded-md bg-red-50 border border-red-200 p-4 text-sm text-red-700 space-y-1">
+                {formErrors.map((err, idx) => (
+                  <div key={idx}>• {err}</div>
+                ))}
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

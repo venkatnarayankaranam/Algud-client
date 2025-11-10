@@ -90,45 +90,60 @@ export const adminAPI = {
   // Products
   getAllProducts: (params) => api.get('/admin/products', { params }),
   createProduct: (data) => {
-    // If an image File is present, send multipart/form-data. Otherwise send JSON to speed up requests.
-    if (data.image instanceof File) {
+    // If an image File is present, send multipart/form-data. Otherwise send JSON.
+    const isFileUpload = data.image instanceof File
+
+    if (isFileUpload) {
       const formData = new FormData()
       Object.keys(data).forEach(key => {
         if (key === 'sizes' && Array.isArray(data[key])) {
           data[key].forEach(size => formData.append('sizes', size))
         } else if (key === 'image' && data[key]) {
           formData.append('image', data[key])
-        } else if (key !== 'image') {
+        } else if (key !== 'image' && key !== 'imageURL') {
+          // Do not append imageURL when uploading a file
           formData.append(key, data[key])
         }
       })
-      // Do NOT set Content-Type header manually; let the browser/axios set the correct
-      // multipart boundary automatically.
+      // Let axios set Content-Type with boundary automatically
       return api.post('/admin/products', formData)
+    } else {
+      // JSON path: remove the image property and avoid sending empty imageURL
+      const jsonData = { ...data }
+      delete jsonData.image
+      if (typeof jsonData.imageURL === 'string' && jsonData.imageURL.trim() === '') {
+        delete jsonData.imageURL
+      }
+      return api.post('/admin/products', jsonData)
     }
-
-    // No file present - send JSON
-    return api.post('/admin/products', data)
   },
   updateProduct: (id, data) => {
-    // If image File present, use multipart; otherwise send JSON to avoid unnecessary file upload handling.
-    if (data.image instanceof File) {
+    // If an image File is present, send multipart/form-data. Otherwise send JSON.
+    const isFileUpload = data.image instanceof File
+
+    if (isFileUpload) {
       const formData = new FormData()
       Object.keys(data).forEach(key => {
         if (key === 'sizes' && Array.isArray(data[key])) {
           data[key].forEach(size => formData.append('sizes', size))
         } else if (key === 'image' && data[key]) {
           formData.append('image', data[key])
-        } else if (key !== 'image') {
+        } else if (key !== 'image' && key !== 'imageURL') {
+          // Do not append imageURL when uploading a file
           formData.append(key, data[key])
         }
       })
       // Let axios set Content-Type with boundary automatically
       return api.put(`/admin/products/${id}`, formData)
+    } else {
+      // JSON path: remove image property and avoid sending empty imageURL
+      const jsonData = { ...data }
+      delete jsonData.image
+      if (typeof jsonData.imageURL === 'string' && jsonData.imageURL.trim() === '') {
+        delete jsonData.imageURL
+      }
+      return api.put(`/admin/products/${id}`, jsonData)
     }
-
-    // No file - send JSON
-    return api.put(`/admin/products/${id}`, data)
   },
   deleteProduct: (id) => api.delete(`/admin/products/${id}`),
   bulkUpdateInventory: (data) => api.put('/admin/products/inventory/bulk', data),

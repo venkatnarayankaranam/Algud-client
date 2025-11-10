@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import formatCurrency from '../utils/formatCurrency'
 import { productsAPI } from '../services/api'
@@ -17,8 +17,12 @@ const Home = () => {
   const [loading, setLoading] = useState(true)
   const { addToCart } = useCart()
   const [currentVideo, setCurrentVideo] = useState(0)
+  const fetchedRef = useRef(false)
 
   useEffect(() => {
+    // In React 18 StrictMode (dev), effects run twice. Guard to fetch only once.
+    if (fetchedRef.current) return
+    fetchedRef.current = true
     fetchProducts()
   }, [])
 

@@ -7,7 +7,7 @@ import { ShoppingBag, User, Menu, X, Search } from 'lucide-react'
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const { user, isAuthenticated, logout } = useAuth()
+  const { user, isAuthenticated, logout, loading } = useAuth()
   const { totalItems } = useCart()
   const navigate = useNavigate()
 
@@ -22,12 +22,12 @@ const Navbar = () => {
 
   return (
   <nav className="bg-black text-white shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div className="relative flex justify-between items-center h-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div className="relative grid grid-cols-3 items-center h-16 lg:flex lg:justify-between">
           {/* Mobile MENU button (left) */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden flex items-center space-x-2 text-sm font-medium p-2 text-white hover:text-gold-500 transition-colors duration-300"
+            className="lg:hidden flex items-center space-x-2 text-sm font-medium p-2 text-white hover:text-gold-500 transition-colors duration-300 justify-self-start"
             aria-label="Toggle menu"
           >
             {isMenuOpen ? (
@@ -47,13 +47,16 @@ const Navbar = () => {
           <Link
             to="/"
             aria-label="ALGUD"
-            className="absolute left-1/2 transform -translate-x-1/2 lg:static lg:transform-none flex items-center space-x-3 flex-shrink-0 transition-all duration-300 ease-in-out text-white"
+            className="justify-self-center lg:static lg:transform-none flex items-center space-x-3 flex-shrink-0 transition-all duration-300 ease-in-out text-white col-start-2"
           >
             <div className="w-10 h-10 flex items-center justify-center relative">
               {/* Always render the image so a valid file is displayed immediately. Hide it if it errors. */}
               <img
                 src="/algud-logo.jpg2.png"
                 alt="ALGUD"
+                width={40}
+                height={40}
+                loading="lazy"
                 className="w-10 h-10 object-contain transition-transform duration-300 ease-in-out hover:scale-105"
                 onLoad={() => setLogoLoaded(true)}
                 onError={() => setLogoError(true)}
@@ -72,7 +75,8 @@ const Navbar = () => {
               )}
             </div>
             <div className="flex items-center leading-none lg:ml-0 ml-0 gap-2">
-              <span className="text-xl sm:text-2xl font-serif font-bold text-white tracking-tight transition-transform duration-300 ease-in-out hover:scale-102 algud-word">
+              {/* Hide wordmark on very small screens to prevent overlap; show from sm and up */}
+              <span className="hidden sm:inline text-xl sm:text-2xl font-serif font-bold text-white tracking-tight transition-transform duration-300 ease-in-out hover:scale-102 algud-word">
                 {Array.from('ALGUD').map((ch, idx) => (
                   <span key={idx} className="inline-block algud-letter mx-0.5">
                     {ch}
@@ -113,7 +117,7 @@ const Navbar = () => {
           </div>
 
           {/* Right side icons */}
-          <div className="flex items-center space-x-2 sm:space-x-4 w-auto lg:w-auto min-w-[120px] justify-end">
+          <div className="flex items-center space-x-2 sm:space-x-4 w-auto lg:w-auto min-w-[120px] justify-self-end justify-end col-start-3">
             {/* Search - visible on mobile */}
             <button className="p-2 text-white hover:text-gold-500 transition-colors duration-300">
               <Search className="w-5 h-5" />
@@ -134,7 +138,7 @@ const Navbar = () => {
             </Link>
 
             {/* User Profile */}
-            {isAuthenticated ? (
+            {loading ? null : isAuthenticated ? (
               <div className="relative">
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -182,7 +186,7 @@ const Navbar = () => {
                   </div>
                 )}
               </div>
-            ) : (
+            ) : loading ? null : (
               /* Hide these on mobile; they will appear inside the mobile menu */
               <div className="hidden sm:flex flex-row items-center sm:space-x-2">
                   <Link

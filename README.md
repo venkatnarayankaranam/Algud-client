@@ -54,7 +54,7 @@ npm install
 
 3. Create `.env.local` file with:
 ```
-VITE_API_URL=https://algud-server.onrender.com/api/api
+VITE_API_URL=http://localhost:5000/api/api
 ```
 
 4. Start the development server:
