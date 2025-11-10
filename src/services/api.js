@@ -1,5 +1,8 @@
 import axios from 'axios'
 
+
+
+axios.defaults.withCredentials = true
 // Default to port 5001 because the server may fall back to that port when 5000 is in use.
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api'
 
