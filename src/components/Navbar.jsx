@@ -23,7 +23,7 @@ const Navbar = () => {
   return (
   <nav className="bg-black text-white shadow-lg sticky top-0 z-50">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div className="relative grid grid-cols-3 items-center h-16 lg:flex lg:justify-between">
+  <div className="relative grid grid-cols-[auto_1fr_auto] items-center h-16 lg:flex lg:justify-between">
           {/* Mobile MENU button (left) */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -47,7 +47,7 @@ const Navbar = () => {
           <Link
             to="/"
             aria-label="ALGUD"
-            className="justify-self-center lg:static lg:transform-none flex items-center space-x-3 flex-shrink-0 transition-all duration-300 ease-in-out text-white col-start-2"
+            className="justify-self-center lg:static lg:transform-none flex items-center space-x-3 flex-shrink-0 transition-all duration-300 ease-in-out text-white col-start-2 z-10"
           >
             <div className="w-10 h-10 flex items-center justify-center relative">
               {/* Always render the image so a valid file is displayed immediately. Hide it if it errors. */}
@@ -76,7 +76,7 @@ const Navbar = () => {
             </div>
             <div className="flex items-center leading-none lg:ml-0 ml-0 gap-2">
               {/* Hide wordmark on very small screens to prevent overlap; show from sm and up */}
-              <span className="hidden sm:inline text-xl sm:text-2xl font-serif font-bold text-white tracking-tight transition-transform duration-300 ease-in-out hover:scale-102 algud-word">
+              <span className="hidden md:inline text-xl md:text-2xl font-serif font-bold text-white tracking-tight transition-transform duration-300 ease-in-out hover:scale-102 algud-word">
                 {Array.from('ALGUD').map((ch, idx) => (
                   <span key={idx} className="inline-block algud-letter mx-0.5">
                     {ch}
