@@ -226,11 +226,8 @@ export const AuthProvider = ({ children }) => {
   }
 
   const googleSignIn = () => {
-    // Redirect to backend OAuth start endpoint. The backend will handle the popup/redirect flow
-    const apiBase = (import.meta.env.VITE_API_URL || 'https://algud-server.onrender.com/api')
-      .replace(/\/$/, '')
-    const serverOrigin = apiBase.replace(/\/api$/, '')
-    window.location.href = `${serverOrigin}/api/auth/google`
+    // Always use relative path so production uses Vercel rewrite (/api -> Render)
+    window.location.href = '/api/auth/google'
   }
 
   const logout = () => {
