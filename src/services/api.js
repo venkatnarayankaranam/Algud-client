@@ -3,8 +3,11 @@ import axios from 'axios'
 // Always send cookies (token is stored in httpOnly cookie)
 axios.defaults.withCredentials = true
 
-// Backend URL (must match deployed server)
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://algud-server.onrender.com/api'
+// Backend URL
+// Use relative '/api' by default so:
+// - Dev: Vite proxy forwards to local server (vite.config.js)
+// - Prod: Vercel rewrite forwards to Render backend (vercel.json)
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
 
 // Create axios instance
 const api = axios.create({
