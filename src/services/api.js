@@ -11,7 +11,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
 
 // Create axios instance
 const api = axios.create({
-  baseURL: "https://algud-server.onrender.com/api",
+  baseURL: "http://localhost:5000/api",
   withCredentials: true
 });
 // Request interceptor (⚠️ Do NOT attach Bearer token — Google login uses cookies)

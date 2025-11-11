@@ -241,22 +241,40 @@ const Navbar = () => {
                 Accessories
               </Link>
               {/* Mobile auth links */}
-              <div className="pt-2 border-t border-gray-100 flex flex-col space-y-2">
-                <Link
-                  to="/login"
-                  className="block text-white hover:text-gold-500 font-medium py-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/register"
-                  className="block btn-secondary text-center py-2 px-4 w-full text-primary-900"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Sign Up
-                </Link>
-              </div>
+              {user ? (
+                <div className="pt-2 border-t border-gray-100 flex flex-col space-y-2">
+                  <Link
+                    to="/account"
+                    className="block text-white hover:text-gold-500 font-medium py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    My Account
+                  </Link>
+                  <button
+                    onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                    className="block text-red-500 hover:text-red-700 font-medium py-2 text-left w-full"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <div className="pt-2 border-t border-gray-100 flex flex-col space-y-2">
+                  <Link
+                    to="/login"
+                    className="block text-white hover:text-gold-500 font-medium py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="block btn-secondary text-center py-2 px-4 w-full text-primary-900"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
               {/* Mobile Search */}
               <div className="pt-4 border-t border-gray-200">
                 <div className="relative">
