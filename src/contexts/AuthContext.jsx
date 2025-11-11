@@ -225,14 +225,12 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const googleSignIn = async (idToken) => {
-    try {
-      await authAPI.googleAuth({ idToken })
-      await loadUser()   // ✅ Fetch logged in user
-      return { success: true }
-    } catch (error) {
-      return { success: false, message: error.response?.data?.message || 'Google auth failed' }
-    }
+  const googleSignIn = () => {
+    // Redirect to backend OAuth start endpoint. The backend will handle the popup/redirect flow
+    const apiBase = (import.meta.env.VITE_API_URL || 'https://algud-server.onrender.com/api')
+      .replace(/\/$/, '')
+    const serverOrigin = apiBase.replace(/\/api$/, '')
+    window.location.href = `${serverOrigin}/api/auth/google`
   }
 
   const logout = () => {
