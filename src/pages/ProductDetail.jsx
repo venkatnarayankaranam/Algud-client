@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+  import ProductMediaGallery from '../components/ProductMediaGallery'
 import formatCurrency from '../utils/formatCurrency'
 import { useParams, useNavigate } from 'react-router-dom'
 import { productsAPI } from '../services/api'
@@ -13,7 +14,7 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true)
   const [selectedSize, setSelectedSize] = useState('')
   const [quantity, setQuantity] = useState(1)
-  const [selectedImage, setSelectedImage] = useState(0)
+  // const [selectedImage, setSelectedImage] = useState(0)
   const { addToCart } = useCart()
 
   useEffect(() => {
@@ -87,15 +88,15 @@ const ProductDetail = () => {
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Product Images */}
+          {/* Product Media Gallery */}
           <div className="space-y-4">
-            <div className="aspect-square overflow-hidden rounded-lg">
-              <img
-                src={product.imageURL}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
+            <ProductMediaGallery
+              media={
+                product.media && product.media.length > 0
+                  ? product.media
+                  : [product.imageURL]
+              }
+            />
           </div>
 
           {/* Product Info */}

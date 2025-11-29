@@ -32,6 +32,7 @@ import Footer from './components/Footer'
 import AdminNavbar from './components/AdminNavbar'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdminRoute from './components/AdminRoute'
+import ScrollToTop from './components/ScrollToTop'
 
 function App() {
   React.useEffect(() => {
@@ -43,6 +44,7 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <Router>
+          <ScrollToTop />
           <div className="min-h-screen bg-primary-100">
             <Routes>
               {/* Public Routes */}

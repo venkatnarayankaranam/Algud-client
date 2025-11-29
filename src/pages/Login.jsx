@@ -133,14 +133,6 @@ const Login = () => {
             </p>
           </div>
 
-          <div className="text-center">
-            <Link
-              to="/admin/login"
-              className="text-sm text-gold-500 hover:text-gold-700 font-medium transition-colors duration-200"
-            >
-              Admin Login
-            </Link>
-          </div>
         </form>
       </div>
     </div>
