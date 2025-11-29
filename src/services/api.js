@@ -14,9 +14,15 @@ const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true
 });
-// Request interceptor (⚠️ Do NOT attach Bearer token — Google login uses cookies)
+// Request interceptor - attach token from localStorage if available
 api.interceptors.request.use(
-  (config) => config,
+  (config) => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
   (error) => Promise.reject(error)
 )
 

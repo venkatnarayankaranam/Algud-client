@@ -193,6 +193,18 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (triedLoadRef.current) return
     triedLoadRef.current = true
+    
+    // Check for auth_token in URL (from Google OAuth redirect)
+    const urlParams = new URLSearchParams(window.location.search)
+    const authToken = urlParams.get('auth_token')
+    if (authToken) {
+      localStorage.setItem('token', authToken)
+      // Remove token from URL
+      urlParams.delete('auth_token')
+      const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '')
+      window.history.replaceState({}, '', newUrl)
+    }
+    
     loadUser().catch(() => dispatch({ type: 'SET_LOADING', payload: false }))
   }, [])
 
@@ -207,8 +219,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      await authAPI.login({ email, password })
-      await loadUser()   // ✅ Fetch user from httpOnly cookie
+      const response = await authAPI.login({ email, password })
+      // Store token in localStorage for cross-domain requests
+      if (response.data.data?.token) {
+        localStorage.setItem('token', response.data.data.token)
+      }
+      await loadUser()   // Fetch user from httpOnly cookie or Authorization header
       return { success: true }
     } catch (error) {
       return { success: false, message: error.response?.data?.message || 'Login failed' }
@@ -217,8 +233,12 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      await authAPI.register({ name, email, password })
-      await loadUser()   // ✅ Fetch user after register
+      const response = await authAPI.register({ name, email, password })
+      // Store token in localStorage for cross-domain requests
+      if (response.data.data?.token) {
+        localStorage.setItem('token', response.data.data.token)
+      }
+      await loadUser()   // Fetch user after register
       return { success: true }
     } catch (error) {
       return { success: false, message: error.response?.data?.message || 'Registration failed' }
@@ -232,6 +252,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     authAPI.logout().catch(() => {})
+    localStorage.removeItem('token')
     dispatch({ type: 'LOGOUT' })
   }
 
